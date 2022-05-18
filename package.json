@@ -1,7 +1,8 @@
 {
   "type": "module",
+  "license": "MIT",
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && node scripts/tweakReactRouterDom.js",
     "dev": "node server.js --dev",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client --ssrManifest",

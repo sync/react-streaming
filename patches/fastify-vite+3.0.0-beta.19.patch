@@ -1,0 +1,67 @@
+diff --git a/node_modules/fastify-vite/config.js b/node_modules/fastify-vite/config.js
+index 958d22e..89b4649 100644
+--- a/node_modules/fastify-vite/config.js
++++ b/node_modules/fastify-vite/config.js
+@@ -3,6 +3,7 @@ const { fileURLToPath } = require('url')
+ const { dirname, join, resolve, exists, stat, read } = require('./ioutils')
+ const { createHtmlTemplateFunction } = require('./html')
+ 
++
+ const DefaultConfig = {
+   // Whether or not to enable Vite's Dev Server
+   dev: process.argv.includes('--dev'),
+@@ -68,7 +69,7 @@ const DefaultConfig = {
+   },
+ 
+   // Function to create the route handler passed to createRoute
+-  createRouteHandler (scope, options) {
++  createRouteHandler (handler, scope, options) {
+     return async function (req, reply) {
+       const page = await reply.render(scope, req, reply)
+       reply.html(page)
+@@ -76,23 +77,25 @@ const DefaultConfig = {
+   },
+ 
+   // Function to create the route errorHandler passed to createRoute
+-  createErrorHandler (scope, config) {
++  createErrorHandler (handler, scope, config) {
+     return (error, req, reply) => {
+       if (config.dev) {
+         console.error(error)
++        scope.vite.devServer.ssrFixStacktrace(error)
+       }
+-      scope.vite.devServer.ssrFixStacktrace(error)
+       scope.errorHandler(error, req, reply)
+     }
+   },
+ }
+ 
+ async function configure (options = {}) {
+-  const defaultConfig = Object.create(DefaultConfig)
++  const defaultConfig = {...DefaultConfig}
+   const root = resolveRoot(options.root)
+-  const [vite, viteConfig] = await resolveViteConfig(root)
++  const dev = typeof options.dev === 'boolean' ? options.dev : defaultConfig.dev;
++
++  const [vite, viteConfig] = await resolveViteConfig(root, dev)
+   const clientModule = defaultConfig.clientModule ?? resolveClientModule(vite.root)
+-  const bundle = await resolveBundle({ ...options, vite })
++  const bundle = await resolveBundle({ dev, vite })
+   const config = Object.assign(defaultConfig, {
+     ...options,
+     vite,
+@@ -136,12 +139,12 @@ function resolveRoot (root) {
+   }
+ }
+ 
+-async function resolveViteConfig (root) {
++async function resolveViteConfig (root, dev) {
+   for (const ext of ['js', 'mjs', 'ts', 'cjs']) {
+     const configFile = join(root, `vite.config.${ext}`)
+     if (exists(configFile)) {
+       return [
+-        await resolveConfig({ configFile }, 'build', 'production'),
++        await resolveConfig({ configFile }, 'build', dev ? 'development' : 'production'),
+         configFile,
+       ]
+     }
