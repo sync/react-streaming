@@ -16,6 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["client", "vite-env.d.ts", "window.d.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["client", "vite-env.d.ts", "window.d.ts"]
 }

@@ -23,8 +23,10 @@ config.exports = {
 
 try {
   writeFileSync(path, JSON.stringify(config, null, 2), 'utf8');
+  // eslint-disable-next-line no-console
   console.log('Successfully modified react-router-dom package.json');
 } catch (error) {
+  // eslint-disable-next-line no-console
   console.log(
     'An error has occurred when modifying react-router-dom package.json',
     error,

@@ -22,7 +22,7 @@ export default {
 };
 
 // The return value of this function gets registered as reply.html()
-function createHtmlFunction(source, scope, config) {
+function createHtmlFunction(source, _scope, _config) {
   const [headSource, footer] = source.split('<!-- element -->');
   const headTemplate = createHtmlTemplateFunction(headSource);
   return function ({ stream, data }) {
@@ -32,6 +32,7 @@ function createHtmlFunction(source, scope, config) {
     this.type('text/html');
     const readable = Readable.from(streamHtml(head, stream, footer))
       // Errors from React SSR can be captured here
+      // eslint-disable-next-line no-console
       .on('error', console.log);
     this.send(readable);
   };

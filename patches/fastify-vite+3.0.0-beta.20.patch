@@ -1,5 +1,5 @@
 diff --git a/node_modules/fastify-vite/config.js b/node_modules/fastify-vite/config.js
-index 958d22e..89b4649 100644
+index 55bfdde..152c913 100644
 --- a/node_modules/fastify-vite/config.js
 +++ b/node_modules/fastify-vite/config.js
 @@ -3,6 +3,7 @@ const { fileURLToPath } = require('url')
@@ -10,21 +10,7 @@ index 958d22e..89b4649 100644
  const DefaultConfig = {
    // Whether or not to enable Vite's Dev Server
    dev: process.argv.includes('--dev'),
-@@ -68,7 +69,7 @@ const DefaultConfig = {
-   },
- 
-   // Function to create the route handler passed to createRoute
--  createRouteHandler (scope, options) {
-+  createRouteHandler (handler, scope, options) {
-     return async function (req, reply) {
-       const page = await reply.render(scope, req, reply)
-       reply.html(page)
-@@ -76,23 +77,25 @@ const DefaultConfig = {
-   },
- 
-   // Function to create the route errorHandler passed to createRoute
--  createErrorHandler (scope, config) {
-+  createErrorHandler (handler, scope, config) {
+@@ -80,19 +81,21 @@ const DefaultConfig = {
      return (error, req, reply) => {
        if (config.dev) {
          console.error(error)
