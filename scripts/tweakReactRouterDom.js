@@ -1,9 +1,9 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs';
 
-const path = './node_modules/react-router-dom/package.json'
+const path = './node_modules/react-router-dom/package.json';
 
-const data = readFileSync(path)
-const config = JSON.parse(data)
+const data = readFileSync(path);
+const config = JSON.parse(data);
 
 config.exports = {
   '.': {
@@ -19,11 +19,14 @@ config.exports = {
     default: './server.js',
   },
   './package.json': './package.json',
-}
+};
 
 try {
-  writeFileSync(path, JSON.stringify(config, null, 2), 'utf8')
-  console.log('Successfully modified react-router-dom package.json')
+  writeFileSync(path, JSON.stringify(config, null, 2), 'utf8');
+  console.log('Successfully modified react-router-dom package.json');
 } catch (error) {
-  console.log('An error has occurred when modifying react-router-dom package.json', error)
+  console.log(
+    'An error has occurred when modifying react-router-dom package.json',
+    error,
+  );
 }

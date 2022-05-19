@@ -12,9 +12,10 @@
     }
   },
   "extends": [
+    "standard",
+    "prettier",
     "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "standard"
+    "plugin:react/jsx-runtime"
   ],
   "plugins": ["react"],
   "rules": {

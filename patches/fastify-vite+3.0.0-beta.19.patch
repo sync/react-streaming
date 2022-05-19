@@ -65,3 +65,10 @@ index 958d22e..89b4649 100644
          configFile,
        ]
      }
+diff --git a/node_modules/fastify-vite/plugin.d.ts b/node_modules/fastify-vite/plugin.d.ts
+new file mode 100644
+index 0000000..63f1026
+--- /dev/null
++++ b/node_modules/fastify-vite/plugin.d.ts
+@@ -0,0 +1 @@
++declare module "fastify-vite/plugin";
