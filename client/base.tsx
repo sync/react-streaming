@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-
-import { Context, PageManager } from './next';
+import type { Context } from './next';
+import { PageManager } from './next';
 import routes from './routes';
 
 export function createApp(ctx?: Context, url?: string) {

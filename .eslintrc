@@ -61,6 +61,7 @@
           { "argsIgnorePattern": "^_", "varsIgnorePattern": "should|expect|^_" }
         ],
         "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/consistent-type-imports": "error",
         "import/order": [
           "error",
           {
