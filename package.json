@@ -1,6 +1,10 @@
 {
+  "name": "react-streaming",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.2.0"
+  },
   "scripts": {
     "postinstall": "patch-package && node scripts/tweakReactRouterDom.js",
     "dev": "node server.js --dev",
