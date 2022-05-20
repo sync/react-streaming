@@ -2,6 +2,7 @@ export {};
 
 declare global {
   interface Window {
-    hydration: { data: any };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    hydration: { serverSideProps?: any };
   }
 }

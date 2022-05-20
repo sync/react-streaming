@@ -1,1 +1,1 @@
-declare module "fastify-vite/plugin";
+declare module 'fastify-vite/plugin';

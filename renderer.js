@@ -19,15 +19,45 @@ import devalue from 'devalue';
 export default {
   createHtmlFunction,
   createRenderFunction,
+  createRoute,
 };
+
+function createRoute({ handler, errorHandler, route }, scope, _config) {
+  if (route.getServerSideProps) {
+    // If getServerSideProps is provided, register JSON endpoint for it
+    scope.get(`/json${route.path}`, async (req, reply) => {
+      reply.send(
+        await route.getServerSideProps({
+          req,
+        }),
+      );
+    });
+  }
+  scope.get(route.path, {
+    // If getServerSideProps is provided,
+    // make sure it runs before the SSR route handler
+    ...(route.getServerSideProps && {
+      async preHandler(req, _reply) {
+        req.serverSideProps = await route.getServerSideProps({
+          req,
+        });
+      },
+    }),
+    handler,
+    errorHandler,
+    ...route,
+  });
+}
 
 // The return value of this function gets registered as reply.html()
 function createHtmlFunction(source, _scope, _config) {
   const [headSource, footer] = source.split('<!-- element -->');
   const headTemplate = createHtmlTemplateFunction(headSource);
-  return function ({ stream, data }) {
+  return function ({ stream, serverSideProps }) {
     const head = headTemplate({
-      hydration: `<script>window.hydration = ${devalue({ data })}</script>`,
+      hydration: `<script>window.hydration = ${devalue({
+        serverSideProps,
+      })}</script>`,
     });
     this.type('text/html');
     const readable = Readable.from(streamHtml(head, stream, footer))
@@ -41,14 +71,14 @@ function createHtmlFunction(source, _scope, _config) {
 function createRenderFunction({ createApp }) {
   // createApp is exported by client/index.js
   return function (server, req, reply) {
-    const data = {
-      todoList: ['Do laundry', 'Respond to emails', 'Write report'],
-    };
+    // Server data that we want to be used for SSR
+    // and made available on the client for hydration
+    const serverSideProps = req.serverSideProps;
     // Creates main React component with all the SSR context it needs
-    const app = createApp({ data, server, req, reply }, req.url);
+    const app = createApp({ serverSideProps, server, req, reply }, req.url);
     // Perform SSR, i.e., turn app.instance into an HTML fragment
     // The SSR context data is passed along so it can be inlined for hydration
-    return { data, stream: toReadable(app) };
+    return { serverSideProps, stream: toReadable(app) };
   };
 }
 

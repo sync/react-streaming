@@ -1,12 +1,3 @@
-import React from 'react';
+import { getPageRoutes } from './next';
 
-export default [
-  {
-    path: '/',
-    component: React.lazy(() => import('./views/index')),
-  },
-  {
-    path: '/other',
-    component: React.lazy(() => import('./views/other')),
-  },
-];
+export default getPageRoutes(import.meta.globEager('/pages/**/*.{jsx,tsx}'));
